@@ -27,6 +27,7 @@
 #include <inttypes.h>
 #include <stdlib.h>	/* defines NULL */
 #include <string.h>	/* memcmp */
+#include <stdio.h>
 
 #include "mpeg2.h"
 #include "attributes.h"
@@ -641,6 +642,20 @@ static int picture_coding_ext (mpeg2dec_t * mpeg2dec)
 	flags |= (((buffer[4]<<26) | (buffer[5]<<18) | (buffer[6]<<10)) &
 		  PIC_MASK_COMPOSITE_DISPLAY) | PIC_FLAG_COMPOSITE_DISPLAY;
     picture->flags = flags;
+
+		// Print flags to console
+		static int frame_id = 0;
+		fprintf(stderr, "%05d: PF : %d | TFF : %d | RFF : %d\n",
+			frame_id, (flags & PIC_FLAG_PROGRESSIVE_FRAME) != 0,
+			(flags & PIC_FLAG_TOP_FIELD_FIRST) != 0,
+			(flags & PIC_FLAG_REPEAT_FIRST_FIELD) != 0);
+
+		// Save flags to metadata file
+		FILE *metadata_file_ptr = fopen("metadata.txt", "a");
+		fprintf(metadata_file_ptr, "%d flags: %d\n", frame_id, flags);
+		fclose(metadata_file_ptr);
+
+		frame_id++;
 
     mpeg2dec->ext_state = PIC_DISPLAY_EXT | COPYRIGHT_EXT | QUANT_MATRIX_EXT;
 
