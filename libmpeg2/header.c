@@ -162,6 +162,16 @@ int mpeg2_header_sequence (mpeg2dec_t * mpeg2dec)
     sequence->pixel_width = buffer[3] >> 4;	/* aspect ratio */
     sequence->frame_period = frame_period[buffer[3] & 15];
 
+		// Save frame period
+		static int frame_period_saved = 0;
+		if (!frame_period_saved)
+		{
+			FILE *metadata_file_ptr = fopen("metadata.txt", "w");
+			fprintf(metadata_file_ptr, "Frame period: %d\n", sequence->frame_period);
+			fclose(metadata_file_ptr);
+			frame_period_saved = 1;
+		}
+
     sequence->byte_rate = (buffer[4]<<10) | (buffer[5]<<2) | (buffer[6]>>6);
 
     sequence->vbv_buffer_size = ((buffer[6]<<16)|(buffer[7]<<8))&0x1ff800;
