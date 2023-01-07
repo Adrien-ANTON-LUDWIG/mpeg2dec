@@ -206,6 +206,8 @@ int mpeg2_header_sequence (mpeg2dec_t * mpeg2dec)
     mpeg2dec->state = STATE_SEQUENCE;
     mpeg2dec->display_offset_x = mpeg2dec->display_offset_y = 0;
 
+		fprintf(stderr, "Progressive sequence flag : %d\n", (sequence->flags & SEQ_FLAG_PROGRESSIVE_SEQUENCE));
+
     return 0;
 }
 
