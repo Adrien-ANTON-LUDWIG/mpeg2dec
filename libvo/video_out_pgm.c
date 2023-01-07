@@ -81,7 +81,7 @@ static void pgm_draw_frame (vo_instance_t * _instance,
     pgm_instance_t * instance = (pgm_instance_t *) _instance;
     char filename[128];
 
-    sprintf (filename, "%d.pgm", instance->framenum++);
+    sprintf (filename, "%05d.pgm", instance->framenum++);
     instance->file = fopen (filename, "wb");
     if (instance->file == NULL)
 	return;
